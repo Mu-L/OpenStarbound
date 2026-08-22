@@ -766,7 +766,7 @@ void UniverseClient::handlePackets(List<PacketPtr> const& packets) {
           RecursiveMutexLocker locker(m_mutex);
           for (auto p : customWorldUpdates) {
             if (!p.second.empty()) {
-              if (p.first.find("../") || p.first.find("..\\")) {
+              if (p.first.contains("../") || p.first.contains("..\\")) {
                 Logger::error("Not saving custom world named {}, path attempts to go up.", p.first);
               } else {
                 String filePath = File::relativeTo(m_customWorldStorageDirectory, strf("{}.world", p.first));
@@ -828,7 +828,7 @@ void UniverseClient::handlePackets(List<PacketPtr> const& packets) {
       } else if (auto serverInfoPacket = as<ServerInfoPacket>(packet)) {
         m_serverInfo = ServerInfo{serverInfoPacket->players, serverInfoPacket->maxPlayers};
       } else if (auto clientCustomWorldRequest = as<ClientCustomWorldRequest>(packet)) {
-        if (clientCustomWorldRequest->name.find("../") || clientCustomWorldRequest->name.find("..\\")) {
+        if (clientCustomWorldRequest->name.contains("../") || clientCustomWorldRequest->name.contains("..\\")) {
           Logger::error("Rejecting custom world name {}, path attempts to go up.", clientCustomWorldRequest->name);
           m_connection->pushSingle(make_shared<ClientCustomWorldResponse>(clientCustomWorldRequest->name, WorldChunks()));
         } else {
