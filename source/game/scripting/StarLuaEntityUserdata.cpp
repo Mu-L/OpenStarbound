@@ -356,7 +356,7 @@ LuaMethods<EntityPtr> LuaUserDataMethods<EntityPtr>::make() {
             return actor->movementController()->liquidPercentage();
         return {};
     });
-    methods.registerMethod("liquidId", [&](EntityPtr entity) -> Maybe<float> {
+    methods.registerMethod("liquidId", [&](EntityPtr entity) -> Maybe<uint8_t> {
         if (auto actor = as<ActorEntity>(entity))
             return actor->movementController()->liquidId();
         return {};
