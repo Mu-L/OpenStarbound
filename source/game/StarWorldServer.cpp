@@ -357,7 +357,7 @@ ClientSubWorldId WorldServer::clientSubWorld(ConnectionId clientId) const {
   if (i != m_clientInfo.end())
     return i->second->subWorldId;
   else
-    return {};
+    return 0;
 }
 
 List<EntityId> WorldServer::players() const {
