@@ -1004,7 +1004,7 @@ const CaseInsensitiveStringMap<std::function<String(CommandProcessor*, Connectio
 
   // Register all commands
   add("admin", &CommandProcessor::admin);
-  add("serverDebug", &CommandProcessor::serverDebug);
+  add("serverdebug", &CommandProcessor::serverDebug);
   add("timewarp", &CommandProcessor::timewarp);
   add("timescale", &CommandProcessor::timescale);
   add("tickrate", &CommandProcessor::tickrate);
