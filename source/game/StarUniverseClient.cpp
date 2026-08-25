@@ -1000,6 +1000,10 @@ void UniverseClient::handlePackets(List<PacketPtr> const& packets) {
         } else {
           Logger::warn("UniverseClient: Received packets for non-existent subworld {}", cwtPacket->subWorldId);
         }
+      } else if (auto logMapUpdate = as<LogMapUpdate>(packet)) {
+        for (auto& p : logMapUpdate->map) {
+          LogMap::setValue(p.first,p.second);
+        }
       } else if (!m_systemWorldClient->handleIncomingPacket(packet)) {
         // see if the system world will handle it, otherwise pass it along to the world client
         m_worldClient->handleIncomingPackets({packet});

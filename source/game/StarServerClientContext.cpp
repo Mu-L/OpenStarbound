@@ -151,6 +151,16 @@ void ServerClientContext::setAdmin(bool admin) {
   m_isAdminNetState.set(admin);
 }
 
+bool ServerClientContext::serverDebug() const {
+  RecursiveMutexLocker locker(m_mutex);
+  return m_serverDebug;
+}
+
+void ServerClientContext::setServerDebug(bool serverDebug) {
+  RecursiveMutexLocker locker(m_mutex);
+  m_serverDebug = serverDebug;
+}
+
 EntityDamageTeam ServerClientContext::team() const {
   RecursiveMutexLocker locker(m_mutex);
   return m_teamNetState.get();

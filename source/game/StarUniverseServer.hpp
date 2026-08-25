@@ -32,7 +32,7 @@ STAR_EXCEPTION(UniverseServerException, StarException);
 // and routes packets between them.
 class UniverseServer : public Thread {
 public:
-  UniverseServer(String const& storageDir);
+  UniverseServer(String const& storageDir, bool const& isLocal = false);
   ~UniverseServer();
 
   // If enabled, will listen on the configured server port for incoming
@@ -78,6 +78,9 @@ public:
   bool canBecomeAdmin(ConnectionId clientId) const;
   void setAdmin(ConnectionId clientId, bool admin);
 
+  bool serverDebug(ConnectionId clientId) const;
+  void setServerDebug(ConnectionId clientId, bool serverDebug);
+
   bool isLocal(ConnectionId clientId) const;
 
   bool isPvp(ConnectionId clientId) const;
@@ -93,7 +96,7 @@ public:
   ClockPtr universeClock() const;
   UniverseSettingsPtr universeSettings() const;
 
-	CelestialDatabase& celestialDatabase();
+  CelestialDatabase& celestialDatabase();
 
   // If the client exists and is in a valid connection state, executes the
   // given function on the client world and player object in a thread safe way.
@@ -241,6 +244,8 @@ private:
   SkyParameters celestialSkyParameters(CelestialCoordinate const& coordinate) const;
 
   mutable RecursiveMutex m_mainLock;
+  
+  bool m_isLocal;
 
   String m_storageDirectory;
   ByteArray m_assetsDigest;

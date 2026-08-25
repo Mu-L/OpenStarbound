@@ -126,7 +126,9 @@ enum class PacketType : uint8_t {
   ClientSubWorldPackets,
   ClientSubWorldRequest,
   ClientSubWorldReject,
-  NotifyWorldLoad
+  NotifyWorldLoad,
+  
+  LogMapUpdate
 };
 extern EnumMap<PacketType> const PacketTypeNames;
 
@@ -1064,5 +1066,15 @@ struct NotifyWorldLoad : PacketBase<PacketType::NotifyWorldLoad> {
   void write(DataStream& ds) const override;
 
   WorldId worldId;
+};
+
+struct LogMapUpdate : PacketBase<PacketType::LogMapUpdate> {
+  LogMapUpdate();
+  LogMapUpdate(Map<String,String> map);
+
+  void read(DataStream& ds) override;
+  void write(DataStream& ds) const override;
+
+  Map<String,String> map;
 };
 }

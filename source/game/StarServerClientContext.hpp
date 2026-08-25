@@ -51,6 +51,9 @@ public:
   bool isAdmin() const;
   void setAdmin(bool admin);
 
+  bool serverDebug() const;
+  void setServerDebug(bool serverDebug);
+
   EntityDamageTeam team() const;
   void setTeam(EntityDamageTeam team);
 
@@ -124,6 +127,8 @@ private:
   String const m_playerName;
   String m_shipSpecies;
   bool const m_canBecomeAdmin;
+  
+  bool m_serverDebug;
 
   mutable RecursiveMutex m_mutex;
 
