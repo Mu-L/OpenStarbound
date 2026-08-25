@@ -947,6 +947,7 @@ void UniverseClient::handlePackets(List<PacketPtr> const& packets) {
       } else if (auto serverInfoPacket = as<ServerInfoPacket>(packet)) {
         m_serverInfo = ServerInfo{serverInfoPacket->players, serverInfoPacket->maxPlayers};
       } else if (auto clientCustomWorldRequest = as<ClientCustomWorldRequest>(packet)) {
+        Logger::info("UniverseClient: Received request for client custom world {}.", clientCustomWorldRequest->name);
         if (clientCustomWorldRequest->name.contains("../") || clientCustomWorldRequest->name.contains("..\\")) {
           Logger::error("Rejecting custom world name {}, path attempts to go up.", clientCustomWorldRequest->name);
           m_connection->pushSingle(make_shared<ClientCustomWorldResponse>(clientCustomWorldRequest->name, WorldChunks()));
