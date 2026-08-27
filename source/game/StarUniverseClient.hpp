@@ -11,6 +11,7 @@
 #include "StarUniverseConnection.hpp"
 #include "StarWorldClientThread.hpp"
 #include "StarLuaComponents.hpp"
+#include "StarUniverse.hpp"
 
 namespace Star {
 
@@ -33,7 +34,7 @@ STAR_CLASS(QuestManager);
 STAR_CLASS(UniverseClient);
 STAR_CLASS(LuaRoot);
 
-class UniverseClient {
+class UniverseClient : public Universe {
 public:
   typedef LuaUpdatableComponent<LuaBaseComponent> ScriptComponent;
   typedef shared_ptr<ScriptComponent> ScriptComponentPtr;
@@ -69,7 +70,7 @@ public:
   void warpPlayer(WarpAction const& warpAction, bool animate = true, String const& animationType = "default", bool deploy = false);
   void flyShip(Vec3I const& system, SystemLocation const& destination, Json const& settings = {});
 
-  CelestialDatabasePtr celestialDatabase() const;
+  CelestialDatabasePtr celestialDatabase() override;
 
   CelestialCoordinate shipCoordinate() const;
 

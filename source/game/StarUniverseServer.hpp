@@ -1,5 +1,6 @@
 #pragma once
 
+#include "StarUniverse.hpp"
 #include "StarLockFile.hpp"
 #include "StarIdMap.hpp"
 #include "StarWorkerPool.hpp"
@@ -30,7 +31,7 @@ STAR_EXCEPTION(UniverseServerException, StarException);
 // Manages all running worlds, listens for new client connections and marshalls
 // between all the different worlds and all the different client connections
 // and routes packets between them.
-class UniverseServer : public Thread {
+class UniverseServer : public Universe, public Thread {
 public:
   UniverseServer(String const& storageDir, bool const& isLocal = false);
   ~UniverseServer();
@@ -96,7 +97,7 @@ public:
   ClockPtr universeClock() const;
   UniverseSettingsPtr universeSettings() const;
 
-  CelestialDatabase& celestialDatabase();
+  CelestialDatabasePtr celestialDatabase() override;
 
   // If the client exists and is in a valid connection state, executes the
   // given function on the client world and player object in a thread safe way.
@@ -119,7 +120,7 @@ public:
   bool sendPacket(ConnectionId clientId, PacketPtr packet);
 
 protected:
-  virtual void run();
+  virtual void run() override;
 
 private:
   struct TimeoutBan {

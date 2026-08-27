@@ -17,6 +17,7 @@
 #include "StarTcp.hpp"
 #include "StarTeamManager.hpp"
 #include "StarUniverseServerLuaBindings.hpp"
+#include "StarCelestialLuaBindings.hpp"
 #include "StarVersioningDatabase.hpp"
 
 namespace Star {
@@ -47,10 +48,6 @@ UniverseServer::UniverseServer(String const& storageDir, bool const& isLocal)
   }
 
   startLuaScripts();
-
-  m_commandProcessor = make_shared<CommandProcessor>(this, m_luaRoot);
-  m_chatProcessor = make_shared<ChatProcessor>();
-  m_chatProcessor->setCommandHandler(bind(&CommandProcessor::userCommand, m_commandProcessor.get(), _1, _2, _3));
 
   Logger::info("UniverseServer: Acquiring universe lock file");
 
@@ -86,6 +83,10 @@ UniverseServer::UniverseServer(String const& storageDir, bool const& isLocal)
 
   m_teamManager = make_shared<TeamManager>();
   m_workerPool.start(universeConfig.getUInt("workerPoolThreads"));
+
+  m_commandProcessor = make_shared<CommandProcessor>(this, m_luaRoot);
+  m_chatProcessor = make_shared<ChatProcessor>();
+  m_chatProcessor->setCommandHandler(bind(&CommandProcessor::userCommand, m_commandProcessor.get(), _1, _2, _3));
 
   size_t networkWorkerThreads = universeConfig.optUInt("networkWorkerThreads").value(0);
   m_connectionServer = make_shared<UniverseConnectionServer>(
@@ -393,8 +394,8 @@ UniverseSettingsPtr UniverseServer::universeSettings() const {
   return m_universeSettings;
 }
 
-CelestialDatabase& UniverseServer::celestialDatabase() {
-  return *m_celestialDatabase;
+CelestialDatabasePtr UniverseServer::celestialDatabase() {
+  return m_celestialDatabase;
 }
 
 bool UniverseServer::executeForClient(ConnectionId clientId, function<void(WorldServer*, PlayerPtr)> action) {
@@ -2976,6 +2977,7 @@ void UniverseServer::startLuaScripts() {
     auto scriptComponent = make_shared<ScriptComponent>();
     scriptComponent->setLuaRoot(m_luaRoot);
     scriptComponent->addCallbacks("universe", LuaBindings::makeUniverseServerCallbacks(this));
+    scriptComponent->addCallbacks("celestial", LuaBindings::makeCelestialCallbacks(this));
     scriptComponent->setScripts(jsonToStringList(p.second.toArray()));
 
     m_scriptContexts.set(p.first, scriptComponent);

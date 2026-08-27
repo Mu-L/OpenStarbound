@@ -23,7 +23,9 @@
 #include "StarFallingBlocksAgent.hpp"
 #include "StarWarpTargetEntity.hpp"
 #include "StarUniverseSettings.hpp"
+#include "StarUniverseServer.hpp"
 #include "StarUniverseServerLuaBindings.hpp"
+#include "StarCelestialLuaBindings.hpp"
 
 namespace Star {
 
@@ -112,6 +114,7 @@ void WorldServer::setPause(bool pause) {
 
 void WorldServer::initLua(UniverseServer* universe) {
   m_luaRoot->addCallbacks("universe", LuaBindings::makeUniverseServerCallbacks(universe));
+  m_luaRoot->addCallbacks("celestial", LuaBindings::makeCelestialCallbacks(universe));
   auto assets = Root::singleton().assets();
   for (auto& p : assets->json("/worldserver.config:scriptContexts").toObject()) {
     auto scriptComponent = make_shared<ScriptComponent>();

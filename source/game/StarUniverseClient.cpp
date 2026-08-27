@@ -507,7 +507,7 @@ void UniverseClient::flyShip(Vec3I const& system, SystemLocation const& destinat
   m_connection->pushSingle(make_shared<FlyShipPacket>(system, destination, settings));
 }
 
-CelestialDatabasePtr UniverseClient::celestialDatabase() const {
+CelestialDatabasePtr UniverseClient::celestialDatabase() {
   return m_celestialDatabase;
 }
 

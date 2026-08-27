@@ -211,6 +211,7 @@ SET (star_game_HEADERS
     interfaces/StarWarpTargetEntity.hpp
     interfaces/StarWireEntity.hpp
     interfaces/StarWorld.hpp
+    interfaces/StarUniverse.hpp
 
     items/StarActiveItem.hpp
     items/StarArmors.hpp
