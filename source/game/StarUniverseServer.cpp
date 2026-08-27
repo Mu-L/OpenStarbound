@@ -21,12 +21,14 @@
 
 namespace Star {
 
-UniverseServer::UniverseServer(String const& storageDir)
+UniverseServer::UniverseServer(String const& storageDir, bool const& isLocal)
     : Thread("UniverseServer"),
       m_workerPool("UniverseServerWorkerPool"),
       m_clients(MinClientConnectionId, MaxClientConnectionId) {
+  m_isLocal = isLocal;
+  
   String const LockFile = "universe.lock";
-
+  
   m_storageDirectory = storageDir;
   if (!File::isDirectory(m_storageDirectory)) {
     Logger::info("UniverseServer: Creating universe storage directory");
@@ -283,6 +285,19 @@ void UniverseServer::setAdmin(ConnectionId clientId, bool admin) {
   ReadLocker clientsLocker(m_clientsLock);
   if (auto clientContext = m_clients.value(clientId))
     clientContext->setAdmin(admin);
+}
+
+bool UniverseServer::serverDebug(ConnectionId clientId) const {
+  ReadLocker clientsLocker(m_clientsLock);
+  if (auto clientContext = m_clients.value(clientId))
+    return clientContext->serverDebug();
+  return false;
+}
+
+void UniverseServer::setServerDebug(ConnectionId clientId, bool serverDebug) {
+  ReadLocker clientsLocker(m_clientsLock);
+  if (auto clientContext = m_clients.value(clientId))
+    clientContext->setServerDebug(serverDebug);
 }
 
 bool UniverseServer::isLocal(ConnectionId clientId) const {
@@ -845,7 +860,12 @@ void UniverseServer::sendClientContextUpdates() {
     auto clientContextData = p.second->writeUpdate();
     if (!clientContextData.empty())
       contextUpdates[p.first] = std::move(clientContextData);
+    
+    if (p.second->serverDebug())
+      m_connectionServer->sendPackets(p.first, {make_shared<LogMapUpdate>(LogMap::getValues())});
   }
+  if (!m_isLocal)
+    LogMap::clear();
 
   for (auto& update : contextUpdates)
     m_connectionServer->sendPackets(update.first, {make_shared<ClientContextUpdatePacket>(std::move(update.second))});

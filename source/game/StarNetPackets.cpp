@@ -85,7 +85,8 @@ EnumMap<PacketType> const PacketTypeNames{
   {PacketType::ClientSubWorldPackets, "ClientSubWorldPackets"},
   {PacketType::ClientSubWorldRequest, "ClientSubWorldRequest"},
   {PacketType::ClientSubWorldReject, "ClientSubWorldReject"},
-  {PacketType::NotifyWorldLoad, "NotifyWorldLoad"}
+  {PacketType::NotifyWorldLoad, "NotifyWorldLoad"},
+  {PacketType::LogMapUpdate, "LogMapUpdate"}
 };
 
 EnumMap<NetCompressionMode> const NetCompressionModeNames {
@@ -186,6 +187,7 @@ PacketPtr createPacket(PacketType type) {
     case PacketType::ClientSubWorldRequest: return make_shared<ClientSubWorldRequest>();
     case PacketType::ClientSubWorldReject: return make_shared<ClientSubWorldReject>();
     case PacketType::NotifyWorldLoad: return make_shared<NotifyWorldLoad>();
+    case PacketType::LogMapUpdate: return make_shared<LogMapUpdate>();
     default:
       throw StarPacketException(strf("Unrecognized packet type {}", (unsigned int)type));
   }
@@ -1563,6 +1565,18 @@ void NotifyWorldLoad::read(DataStream& ds) {
 
 void NotifyWorldLoad::write(DataStream& ds) const {
   ds.write(worldId);
+}
+
+LogMapUpdate::LogMapUpdate() {}
+
+LogMapUpdate::LogMapUpdate(Map<String,String> map) : map(std::move(map)) {}
+
+void LogMapUpdate::read(DataStream& ds) {
+  ds.read(map);
+}
+
+void LogMapUpdate::write(DataStream& ds) const {
+  ds.write(map);
 }
 
 }

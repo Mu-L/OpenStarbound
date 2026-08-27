@@ -130,6 +130,19 @@ String CommandProcessor::admin(ConnectionId connectionId, String const& argument
     return strf("Admin privileges taken away from {}", m_universe->clientNick(targetClientId));
 }
 
+String CommandProcessor::serverDebug(ConnectionId connectionId, String const& argumentString) {
+  if (auto errorMsg = adminCheck(connectionId, "debug server"))
+    return *errorMsg;
+  if (m_universe->isLocal(connectionId))
+    return "Server is local, server debug already active";
+  if (m_universe->clientConnectionVersion(connectionId) < 17)
+    return "Client is not new enough to debug server";
+  
+  bool nowEnabled = !m_universe->serverDebug(connectionId);
+  m_universe->setServerDebug(connectionId,nowEnabled);
+  return strf("Server debug {}", nowEnabled ? "enabled" : "disabled");
+}
+
 String CommandProcessor::pvp(ConnectionId connectionId, String const&) {
   if (!m_universe->isPvp(connectionId)) {
     m_universe->setPvp(connectionId, true);
@@ -991,6 +1004,7 @@ const CaseInsensitiveStringMap<std::function<String(CommandProcessor*, Connectio
 
   // Register all commands
   add("admin", &CommandProcessor::admin);
+  add("serverdebug", &CommandProcessor::serverDebug);
   add("timewarp", &CommandProcessor::timewarp);
   add("timescale", &CommandProcessor::timescale);
   add("tickrate", &CommandProcessor::tickrate);
