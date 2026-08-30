@@ -59,6 +59,7 @@ namespace LuaBindings {
           includedTypes->add(EntityType::Npc);
           includedTypes->add(EntityType::Projectile);
           includedTypes->add(EntityType::ItemDrop);
+          includedTypes->add(EntityType::PlantDrop);
           includedTypes->add(EntityType::Vehicle);
         } else if (type == "creature") {
           includedTypes->add(EntityType::Player);
@@ -1462,16 +1463,8 @@ namespace LuaBindings {
   Maybe<Vec2F> WorldEntityCallbacks::entityVelocity(World* world, EntityId entityId) {
     auto entity = world->entity(entityId);
 
-    if (auto monsterEntity = as<Monster>(entity))
-      return monsterEntity->velocity();
-    else if (auto npcEntity = as<Npc>(entity))
-      return npcEntity->velocity();
-    else if (auto playerEntity = as<Player>(entity))
-      return playerEntity->velocity();
-    else if (auto vehicleEntity = as<Vehicle>(entity))
-      return vehicleEntity->velocity();
-    else if (auto projectileEntity = as<Projectile>(entity))
-      return projectileEntity->velocity();
+    if (auto mobileEntity = as<MobileEntity>(entity))
+        return mobileEntity->movementController()->velocity();
 
     return {};
   }

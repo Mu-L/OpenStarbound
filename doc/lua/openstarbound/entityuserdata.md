@@ -234,97 +234,98 @@ Returns if the specified status effect is active on the entity or `nil` if the e
 
 #### `Maybe<float>` entity:mass()
 
-Returns the entity's mass or `nil` if the entity is not an actor entity.
+Returns the entity's mass or `nil` if the entity is not a mobile entity.
+Mobile entities are actor entities as well as vehicles, projectiles, item drops, and plant drops (falling trees/vines)
 
 ---
 
 #### `Maybe<RectF>` entity:boundBox()
 
-Returns the entity's collision poly bound box or `nil` if the entity is not an actor entity.
+Returns the entity's collision poly bound box or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<PolyF>` entity:collisionPoly()
 
-Returns the entity's collision poly or `nil` if the entity is not an actor entity.
+Returns the entity's collision poly or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<PolyF>` entity:collisionBody()
 
-Returns the entity's collision body or `nil` if the entity is not an actor entity.
+Returns the entity's collision body or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<RectF>` entity:collisionBoundBox()
 
-Returns the entity's collision poly bound box in world space coordinates or `nil` if the entity is not an actor entity.
+Returns the entity's collision poly bound box in world space coordinates or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<RectF>` entity:localBoundBox()
 
-Returns the entity's movement controller local bound box or `nil` if the entity is not an actor entity.
+Returns the entity's movement controller local bound box or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<float>` entity:rotation()
 
-Returns the entity's rotation or `nil` if the entity is not an actor entity.
+Returns the entity's rotation or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:isColliding()
 
-Returns if the entity is colliding or `nil` if the entity is not an actor entity.
+Returns if the entity is colliding or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:isNullColliding()
 
-Returns if the entity is colliding with null collision or `nil` if the entity is not an actor entity.
+Returns if the entity is colliding with null collision or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:isCollisionStuck()
 
-Returns if the entity is sticking or `nil` if the entity is not an actor entity.
+Returns if the entity is sticking or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<float>` entity:stickingDirection()
 
-Returns the direction the entity is sticking at or `nil` if the entity is not an actor entity or isn't stuck.
+Returns the direction the entity is sticking at or `nil` if the entity is not a mobile entity or isn't stuck.
 
 ---
 
 #### `Maybe<float>` entity:liquidPercentage()
 
-Returns the entity's percentage of being submerged in liquid or `nil` if the entity is not an actor entity.
+Returns the entity's percentage of being submerged in liquid or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<LiquidId>` entity:liquidId()
 
-Returns the liquid the entity is submerged in or `nil` if the entity is not an actor entity.
+Returns the liquid the entity is submerged in or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:onGround()
 
-Returns if the entity is on the ground or `nil` if the entity is not an actor entity.
+Returns if the entity is on the ground or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:zeroG()
 
-Returns if the entity is in zero-G movement or `nil` if the entity is not an actor entity.
+Returns if the entity is in zero-G movement or `nil` if the entity is not a mobile entity.
 
 ---
 
 #### `Maybe<bool>` entity:atWorldLimit()
 
-Returns if the entity is at the world limit or `nil` if the entity is not an actor entity.
+Returns if the entity is at the world limit or `nil` if the entity is not a mobile entity.
 
 ---
 
@@ -336,7 +337,7 @@ Returns the entity's base movement parameters or `nil` if the entity is not an a
 
 #### `Maybe<Json>` entity:movementParameters()
 
-Returns the entity's current movement parameters or `nil` if the entity is not an actor entity.
+Returns the entity's current movement parameters or `nil` if the entity is not a mobile entity.
 
 ---
 

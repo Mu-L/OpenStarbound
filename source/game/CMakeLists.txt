@@ -179,6 +179,7 @@ SET (star_game_HEADERS
     StarWorldTemplate.hpp
     StarWorldTiles.hpp
 
+    interfaces/StarActorEntity.hpp
     interfaces/StarAnchorableEntity.hpp
     interfaces/StarActivatableItem.hpp
     interfaces/StarAggressiveEntity.hpp
@@ -193,6 +194,7 @@ SET (star_game_HEADERS
     interfaces/StarFireableItem.hpp
     interfaces/StarInteractiveEntity.hpp
     interfaces/StarLoungingEntities.hpp
+    interfaces/StarMobileEntity.hpp
     interfaces/StarNametagEntity.hpp
     interfaces/StarNonRotatedDrawablesItem.hpp
     interfaces/StarPhysicsEntity.hpp
