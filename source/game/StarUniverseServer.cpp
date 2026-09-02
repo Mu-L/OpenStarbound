@@ -2610,6 +2610,7 @@ Maybe<UniverseServer::WorldServerPromise> UniverseServer::celestialWorldPromise(
       Logger::info("UniverseServer: Creating celestial world {}", celestialWorldId);
       auto worldTemplate = make_shared<WorldTemplate>(celestialWorldId, celestialDatabase);
       worldServer = make_shared<WorldServer>(worldTemplate, File::open(storageFile, IOMode::ReadWrite | IOMode::Truncate));
+      m_celestialDatabase->markPersistent(celestialWorldId);
     }
 
     worldServer->setUniverseSettings(m_universeSettings);
@@ -2937,6 +2938,7 @@ SystemWorldServerThreadPtr UniverseServer::createSystemWorld(Vec3I const& locati
     if (!loadedFromStorage) {
       Logger::info("UniverseServer: Creating new system world at location {}", location);
       systemWorld = make_shared<SystemWorldServer>(location, m_universeClock, m_celestialDatabase);
+      m_celestialDatabase->markPersistent(CelestialCoordinate(location));
     }
 
     auto systemThread = make_shared<SystemWorldServerThread>(location, systemWorld, storageFile);
