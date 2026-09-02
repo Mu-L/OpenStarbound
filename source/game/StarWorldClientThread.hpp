@@ -53,6 +53,7 @@ public:
 
   // 
   void passMessage(Message&& message);
+  void clearMessages();
 
 protected:
   virtual void run();

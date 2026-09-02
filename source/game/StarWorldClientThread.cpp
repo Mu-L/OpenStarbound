@@ -76,6 +76,17 @@ void WorldClientThread::passMessage(Message&& message) {
   m_messages.append(std::move(message));
 }
 
+void WorldClientThread::clearMessages() {
+  List<Message> messages;
+  {
+    RecursiveMutexLocker locker(m_messageMutex);
+    messages = std::move(m_messages);
+  }
+  for (auto& message : messages) {
+    message.promise.fail("Messages discarded");
+  }
+}
+
 void WorldClientThread::run() {
   try {
     auto& root = Root::singleton();
@@ -121,16 +132,19 @@ void WorldClientThread::update() {
   if (dt > 0.0f && (!m_pause || *m_pause == false))
     m_worldClient->update(dt);
 
-  List<Message> messages;
-  {
-    RecursiveMutexLocker locker(m_messageMutex);
-    messages = std::move(m_messages);
-  }
-  for (auto& message : messages) {
-    if (auto resp = m_worldClient->receiveMessage(ServerConnectionId, message.message, message.args))
-      message.promise.fulfill(*resp);
-    else
-      message.promise.fail("Message not handled by world");
+  // don't handle messages until in world
+  if (m_worldClient->inWorld()) {
+    List<Message> messages;
+    {
+      RecursiveMutexLocker locker(m_messageMutex);
+      messages = std::move(m_messages);
+    }
+    for (auto& message : messages) {
+      if (auto resp = m_worldClient->receiveMessage(ServerConnectionId, message.message, message.args))
+        message.promise.fulfill(*resp);
+      else
+        message.promise.fail("Message not handled by world");
+    }
   }
 
   auto outgoingPackets = m_worldClient->getOutgoingPackets();

@@ -354,6 +354,7 @@ void UniverseClient::update(float dt) {
       if (thread->errorOccurred() || thread->shouldExpire()) {
         Logger::info("UniverseClient: Cleaning up subworld {}.",subWorldId);
         thread->stop();
+        thread->clearMessages();
         m_subWorldThreads.remove(subWorldId);
         if (m_subWorlds.hasLeftValue(subWorldId)) {
           m_subWorlds.removeLeft(subWorldId);
@@ -988,6 +989,11 @@ void UniverseClient::handlePackets(List<PacketPtr> const& packets) {
         if (m_subWorlds.hasLeftValue(cwtReject->subWorldId)) {
           m_subWorlds.removeLeft(cwtReject->subWorldId);
           // thread will time out on its own if left unused.
+        }
+        if (m_subWorldThreads.contains(cwtReject->subWorldId)) {
+          // though do make sure to clear messages so their promises are considered rejected.
+          auto worldThread = m_subWorldThreads.get(cwtReject->subWorldId);
+          worldThread->clearMessages();
         }
         for (auto& p : m_scriptContexts) {
           p.second->invoke("subWorldRejected",cwtReject->subWorldId);
