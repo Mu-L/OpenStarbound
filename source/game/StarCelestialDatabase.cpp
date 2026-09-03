@@ -361,13 +361,14 @@ void CelestialMasterDatabase::updateParameters(CelestialCoordinate const& coordi
     updated = true;
   }
 
-  if (updated && chunk.persistent && m_database.isOpen()) {
+  if (updated && m_database.isOpen()) {
     auto versioningDatabase = Root::singleton().versioningDatabase();
     auto versionedChunk = versioningDatabase->makeCurrentVersionedJson("CelestialChunk", chunk.toJson());
     DataStreamBuffer ds;
     ds.write(versionedChunk);
     VersionedJson::writeSubVersioning(ds, versionedChunk);
     m_database.insert(DataStreamBuffer::serialize(chunkIndex), compressData(ds.data()));
+    chunk.persistent = true;
 
     m_chunkCache.remove(chunkIndex);
   } else {
