@@ -128,7 +128,7 @@ private:
   String m_shipSpecies;
   bool const m_canBecomeAdmin;
   
-  bool m_serverDebug;
+  bool m_serverDebug = false;
 
   mutable RecursiveMutex m_mutex;
 
